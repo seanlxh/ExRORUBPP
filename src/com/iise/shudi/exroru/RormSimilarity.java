@@ -20,25 +20,33 @@ public class RormSimilarity {
 
 //        PNMLSerializer pnmlSerializer = new PNMLSerializer();
 //        String filePath =
-//                "C:\\Users\\Shudi\\Desktop\\rorm\\test\\parallel_inv_1_a.pnml";
+//                "C:\\Users\\Shudi\\Desktop\\rorm\\TC\\TC-FI.300.pnml";
 //        NetSystem net = pnmlSerializer.parse(filePath);
 //        RefinedOrderingRelationsMatrix rorm = new
-//                RefinedOrderingRelationsMatrix(net);
+//                RefinedOrderingRelationsMatrix((NetSystem) net.clone());
 //        rorm.printMatrix();
 //        rorm.print();
 
         PNMLSerializer pnmlSerializer = new PNMLSerializer();
-        String filepath1 = "C:\\Users\\Shudi\\Desktop\\rorm\\test\\M0.pnml";
-        String filepath2 = "C:\\Users\\Shudi\\Desktop\\rorm\\test\\M2.pnml";
+        String filepath1 = "C:\\Users\\Shudi\\Desktop\\rorm\\TC\\TC-FI.050_DONG.pnml";
+        String filepath2 = "C:\\Users\\Shudi\\Desktop\\rorm\\TC\\TC-FI.050.pnml";
         NetSystem net1 = pnmlSerializer.parse(filepath1);
         NetSystem net2 = pnmlSerializer.parse(filepath2);
-        RormSimilarity sim = new RormSimilarity();
-        System.out.println(sim.similarity(net1, net2));
+        RormSimilarity rorm = new RormSimilarity();
+        float sim = rorm.similarity(net1, net2);
+        if(sim == Float.MIN_VALUE) {
+            System.out.println("Invalid Net System");
+        } else {
+            System.out.println(sim);
+        }
     }
 
     public float similarity(NetSystem net1, NetSystem net2) {
-        RefinedOrderingRelationsMatrix rorm1 = new RefinedOrderingRelationsMatrix(net1);
-        RefinedOrderingRelationsMatrix rorm2 = new RefinedOrderingRelationsMatrix(net2);
+        RefinedOrderingRelationsMatrix rorm1 = new RefinedOrderingRelationsMatrix((NetSystem) net1.clone());
+        RefinedOrderingRelationsMatrix rorm2 = new RefinedOrderingRelationsMatrix((NetSystem) net2.clone());
+        if (!rorm1.isValid() || !rorm2.isValid()) {
+            return Float.MIN_VALUE;
+        }
         return similarityWithNever(rorm1, rorm2);
     }
 

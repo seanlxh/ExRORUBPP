@@ -19,9 +19,15 @@ public class RefinedOrderingRelationsMatrix {
 
     public static final int FORWARD = 1;
     public static final int BACKWARD = 0;
+    public static final String NEW_PS = "NEW_PS";
+    public static final String NEW_PE = "NEW_PE";
+    public static final String NEW_TS = "NEW_TS";
+    public static final String NEW_TE = "NEW_TE";
 
     private NetSystem _sys;
     private CompletePrefixUnfolding _cpu;
+    private boolean _valid;
+    private boolean _extend;
     private RefinedOrderingRelation[][] causalMatrix;
     private RefinedOrderingRelation[][] inverseCausalMatrix;
     private RefinedOrderingRelation[][] concurrentMatrix;
@@ -33,7 +39,15 @@ public class RefinedOrderingRelationsMatrix {
     private SequentialDirectAdjacency _sda;
 
     public RefinedOrderingRelationsMatrix(NetSystem sys) {
-        initialiseNetSystem(sys);
+        this(sys, true);
+    }
+
+    public RefinedOrderingRelationsMatrix(NetSystem sys, boolean extend) {
+        this._extend = extend;
+        this._valid = initialiseNetSystem(sys);
+        if (!this._valid) {
+            return;
+        }
         this._sys = sys;
         this._cpu = new CompletePrefixUnfolding(this._sys);
         this._lc = new LeastCommonPredecessorsAndSuccessors(this._cpu);
@@ -57,7 +71,15 @@ public class RefinedOrderingRelationsMatrix {
 
     private void generateCausalAndInverseCausalMatrix() {
         List<Transition> alObTransitions = new ArrayList<>(this._sys.getObservableTransitions());
-        Collections.sort(alObTransitions, (t1, t2) -> t1.getName().compareTo(t2.getName()));
+        Collections.sort(alObTransitions, (t1, t2) -> {
+            if(t1.getName().equals(NEW_TS) || t2.getName().equals(NEW_TE)) {
+                return -1;
+            } else if(t1.getName().equals(NEW_TE) || t2.getName().equals(NEW_TS)) {
+                return 1;
+            } else {
+                return t1.getName().compareTo(t2.getName());
+            }
+        });
         for (int i = 0; i < alObTransitions.size(); ++i) {
             Transition fromTransition = alObTransitions.get(i);
             Set<Event> fromEvents = this._cpu.getEvents(fromTransition);
@@ -265,7 +287,15 @@ public class RefinedOrderingRelationsMatrix {
 
     private void generateConcurrentMatrix() {
         List<Transition> alObTransitions = new ArrayList<>(this._sys.getObservableTransitions());
-        Collections.sort(alObTransitions, (t1, t2) -> t1.getName().compareTo(t2.getName()));
+        Collections.sort(alObTransitions, (t1, t2) -> {
+            if(t1.getName().equals(NEW_TS) || t2.getName().equals(NEW_TE)) {
+                return -1;
+            } else if(t1.getName().equals(NEW_TE) || t2.getName().equals(NEW_TS)) {
+                return 1;
+            } else {
+                return t1.getName().compareTo(t2.getName());
+            }
+        });
         for (int i = 0; i < alObTransitions.size(); ++i) {
             Transition fromTransition = alObTransitions.get(i);
             Set<Event> fromEvents = this._cpu.getEvents(fromTransition);
@@ -643,13 +673,49 @@ public class RefinedOrderingRelationsMatrix {
     private void getTransitionNames() {
         this.tName = new ArrayList<>();
         this._sys.getTransitions().stream().filter(Transition::isObservable).forEach(t -> tName.add(t.getName()));
-        Collections.sort(tName);
+        Collections.sort(tName, (t1, t2) -> {
+            if (t1.equals(NEW_TS) || t2.equals(NEW_TE)) {
+                return -1;
+            } else if (t1.equals(NEW_TE) || t2.equals(NEW_TS)) {
+                return 1;
+            } else {
+                return t1.compareTo(t2);
+            }
+        });
     }
 
-    private void initialiseNetSystem(NetSystem net) {
+    private boolean initialiseNetSystem(NetSystem net) {
+        if (!checkNetSystem(net)) {
+            return false;
+        }
+        if(this._extend) {
+            extendNetSystem(net);
+        }
         net.getNodes().forEach(n -> n.setName(n.getLabel()));
         net.getTransitions().stream().filter(t -> t.getLabel().toLowerCase().startsWith("inv_")).forEach(t -> t.setLabel(""));
         net.getPlaces().stream().filter(p -> net.getIncomingEdges(p).isEmpty()).forEach(p -> net.getMarking().put(p, 1));
+        return true;
+    }
+
+    private boolean checkNetSystem(NetSystem net) {
+        if (net.getSourcePlaces().size() == 1 && net.getSourceTransitions().size() == 0
+                && net.getSinkPlaces().size() == 1 && net.getSinkTransitions().size() == 0) {
+            return true;
+        }
+        return false;
+    }
+
+    private void extendNetSystem(NetSystem net) {
+        Place source = net.getSourcePlaces().iterator().next();
+        Place sink = net.getSinkPlaces().iterator().next();
+        Place ps = new Place(NEW_PS);
+        Place pe = new Place(NEW_PE);
+        Transition ts = new Transition(NEW_TS);
+        Transition te = new Transition(NEW_TE);
+        net.addFlow(ps, ts);
+        net.addFlow(ts, source);
+        net.addFlow(sink, te);
+        net.addFlow(te, pe);
     }
 
     public void printMatrix() {
@@ -715,6 +781,10 @@ public class RefinedOrderingRelationsMatrix {
 
     public List<String> gettName() {
         return tName;
+    }
+
+    public boolean isValid() {
+        return _valid;
     }
 
 }

@@ -208,7 +208,9 @@ public class AbstractCompletePrefixUnfolding<BPN extends IBPNode<N>, C extends I
             P p = pre.iterator().next();
 
             for (C d : CC) {
-                if (d.getPlace().equals(p)) {
+                // add "!d.isCutoffPost()"
+                // by Shudi Wang
+                if (!d.isCutoffPost() && d.getPlace().equals(p)) {
                     Set<C> C2 = new HashSet<C>();
                     for (C dd : CC)
                         if (this.areConcurrent((BPN) d, (BPN) dd))
