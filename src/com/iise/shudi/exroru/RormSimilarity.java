@@ -20,7 +20,7 @@ public class RormSimilarity {
 
 //        PNMLSerializer pnmlSerializer = new PNMLSerializer();
 //        String filePath =
-//                "C:\\Users\\Shudi\\Desktop\\rorm\\TC\\TC-FI.300.pnml";
+//                "C:\\Users\\Shudi\\Desktop\\rorm\\test\\parallel_inv_1_a.pnml";
 //        NetSystem net = pnmlSerializer.parse(filePath);
 //        RefinedOrderingRelationsMatrix rorm = new
 //                RefinedOrderingRelationsMatrix((NetSystem) net.clone());
@@ -28,8 +28,10 @@ public class RormSimilarity {
 //        rorm.print();
 
         PNMLSerializer pnmlSerializer = new PNMLSerializer();
-        String filepath1 = "C:\\Users\\Shudi\\Desktop\\rorm\\TC\\TC-FI.050_DONG.pnml";
-        String filepath2 = "C:\\Users\\Shudi\\Desktop\\rorm\\TC\\TC-FI.050.pnml";
+        RefinedOrderingRelation.SDA_WEIGHT = 0.0;
+        RefinedOrderingRelation.IMPORTANCE = false;
+        String filepath1 = "C:\\Users\\Shudi\\Desktop\\rorm\\test\\M0.pnml";
+        String filepath2 = "C:\\Users\\Shudi\\Desktop\\rorm\\test\\M4.pnml";
         NetSystem net1 = pnmlSerializer.parse(filepath1);
         NetSystem net2 = pnmlSerializer.parse(filepath2);
         RormSimilarity rorm = new RormSimilarity();
@@ -85,28 +87,28 @@ public class RormSimilarity {
                             .unionWithoutNever(matrix2.getInverseCausalMatrix()[idx2i][idx2j]);
                     concurrentUnion += matrix1.getConcurrentMatrix()[i][j]
                             .unionWithoutNever(matrix2.getConcurrentMatrix()[idx2i][idx2j]);
-                    if (matrix1.getCausalMatrix()[i][j].relation != Relation.NEVER
-                            || matrix2.getCausalMatrix()[idx2i][idx2j].relation != Relation.NEVER) {
+                    if (matrix1.getCausalMatrix()[i][j].getRelation() != Relation.NEVER
+                            || matrix2.getCausalMatrix()[idx2i][idx2j].getRelation() != Relation.NEVER) {
                         ++causalUnionSize;
                     }
-                    if (matrix1.getInverseCausalMatrix()[i][j].relation != Relation.NEVER
-                            || matrix2.getInverseCausalMatrix()[idx2i][idx2j].relation != Relation.NEVER) {
+                    if (matrix1.getInverseCausalMatrix()[i][j].getRelation() != Relation.NEVER
+                            || matrix2.getInverseCausalMatrix()[idx2i][idx2j].getRelation() != Relation.NEVER) {
                         ++inverseCausalUnionSize;
                     }
-                    if (matrix1.getConcurrentMatrix()[i][j].relation != Relation.NEVER
-                            || matrix2.getConcurrentMatrix()[idx2i][idx2j].relation != Relation.NEVER) {
+                    if (matrix1.getConcurrentMatrix()[i][j].getRelation() != Relation.NEVER
+                            || matrix2.getConcurrentMatrix()[idx2i][idx2j].getRelation() != Relation.NEVER) {
                         ++concurrentUnionSize;
                     }
                 } else {
-                    causalUnion += matrix1.getCausalMatrix()[i][j].relation == Relation.NEVER ? 0
-                            : matrix1.getCausalMatrix()[i][j].importance;
-                    inverseCausalUnion += matrix1.getInverseCausalMatrix()[i][j].relation == Relation.NEVER ? 0
-                            : matrix1.getInverseCausalMatrix()[i][j].importance;
-                    concurrentUnion += matrix1.getConcurrentMatrix()[i][j].relation == Relation.NEVER ? 0
-                            : matrix1.getConcurrentMatrix()[i][j].importance;
-                    causalUnionSize += matrix1.getCausalMatrix()[i][j].relation == Relation.NEVER ? 0 : 1;
-                    inverseCausalUnionSize += matrix1.getInverseCausalMatrix()[i][j].relation == Relation.NEVER ? 0 : 1;
-                    concurrentUnionSize += matrix1.getConcurrentMatrix()[i][j].relation == Relation.NEVER ? 0 : 1;
+                    causalUnion += matrix1.getCausalMatrix()[i][j].getRelation() == Relation.NEVER ? 0
+                            : matrix1.getCausalMatrix()[i][j].getImportance();
+                    inverseCausalUnion += matrix1.getInverseCausalMatrix()[i][j].getRelation() == Relation.NEVER ? 0
+                            : matrix1.getInverseCausalMatrix()[i][j].getImportance();
+                    concurrentUnion += matrix1.getConcurrentMatrix()[i][j].getRelation() == Relation.NEVER ? 0
+                            : matrix1.getConcurrentMatrix()[i][j].getImportance();
+                    causalUnionSize += matrix1.getCausalMatrix()[i][j].getRelation() == Relation.NEVER ? 0 : 1;
+                    inverseCausalUnionSize += matrix1.getInverseCausalMatrix()[i][j].getRelation() == Relation.NEVER ? 0 : 1;
+                    concurrentUnionSize += matrix1.getConcurrentMatrix()[i][j].getRelation() == Relation.NEVER ? 0 : 1;
                 }
             }
         }
@@ -115,15 +117,15 @@ public class RormSimilarity {
             for (int j = 0; j < tName2.size(); ++j) {
                 int idx1j = tName1.indexOf(tName2.get(j));
                 if (idx1i == -1 || idx1j == -1) {
-                    causalUnion += matrix2.getCausalMatrix()[i][j].relation == Relation.NEVER ? 0
-                            : matrix2.getCausalMatrix()[i][j].importance;
-                    inverseCausalUnion += matrix2.getInverseCausalMatrix()[i][j].relation == Relation.NEVER ? 0
-                            : matrix2.getInverseCausalMatrix()[i][j].importance;
-                    concurrentUnion += matrix2.getConcurrentMatrix()[i][j].relation == Relation.NEVER ? 0
-                            : matrix2.getConcurrentMatrix()[i][j].importance;
-                    causalUnionSize += matrix2.getCausalMatrix()[i][j].relation == Relation.NEVER ? 0 : 1;
-                    inverseCausalUnionSize += matrix2.getInverseCausalMatrix()[i][j].relation == Relation.NEVER ? 0 : 1;
-                    concurrentUnionSize += matrix2.getConcurrentMatrix()[i][j].relation == Relation.NEVER ? 0 : 1;
+                    causalUnion += matrix2.getCausalMatrix()[i][j].getRelation() == Relation.NEVER ? 0
+                            : matrix2.getCausalMatrix()[i][j].getImportance();
+                    inverseCausalUnion += matrix2.getInverseCausalMatrix()[i][j].getRelation() == Relation.NEVER ? 0
+                            : matrix2.getInverseCausalMatrix()[i][j].getImportance();
+                    concurrentUnion += matrix2.getConcurrentMatrix()[i][j].getRelation() == Relation.NEVER ? 0
+                            : matrix2.getConcurrentMatrix()[i][j].getImportance();
+                    causalUnionSize += matrix2.getCausalMatrix()[i][j].getRelation() == Relation.NEVER ? 0 : 1;
+                    inverseCausalUnionSize += matrix2.getInverseCausalMatrix()[i][j].getRelation() == Relation.NEVER ? 0 : 1;
+                    concurrentUnionSize += matrix2.getConcurrentMatrix()[i][j].getRelation() == Relation.NEVER ? 0 : 1;
                 }
             }
         }
@@ -178,13 +180,13 @@ public class RormSimilarity {
                     inverseCausalUnion += matrix1.getInverseCausalMatrix()[idx1i][idx1j].unionWithNever(matrix2.getInverseCausalMatrix()[idx2i][idx2j]);
                     concurrentUnion += matrix1.getConcurrentMatrix()[idx1i][idx1j].unionWithNever(matrix2.getConcurrentMatrix()[idx2i][idx2j]);
                 } else if (idx1i != -1 && idx1j != -1) {
-                    causalUnion += matrix1.getCausalMatrix()[idx1i][idx1j].importance;
-                    inverseCausalUnion += matrix1.getInverseCausalMatrix()[idx1i][idx1j].importance;
-                    concurrentUnion += matrix1.getConcurrentMatrix()[idx1i][idx1j].importance;
+                    causalUnion += matrix1.getCausalMatrix()[idx1i][idx1j].getImportance();
+                    inverseCausalUnion += matrix1.getInverseCausalMatrix()[idx1i][idx1j].getImportance();
+                    concurrentUnion += matrix1.getConcurrentMatrix()[idx1i][idx1j].getImportance();
                 } else if (idx2i != -1 && idx2j != -1) {
-                    causalUnion += matrix2.getCausalMatrix()[idx2i][idx2j].importance;
-                    inverseCausalUnion += matrix2.getInverseCausalMatrix()[idx2i][idx2j].importance;
-                    concurrentUnion += matrix2.getConcurrentMatrix()[idx2i][idx2j].importance;
+                    causalUnion += matrix2.getCausalMatrix()[idx2i][idx2j].getImportance();
+                    inverseCausalUnion += matrix2.getInverseCausalMatrix()[idx2i][idx2j].getImportance();
+                    concurrentUnion += matrix2.getConcurrentMatrix()[idx2i][idx2j].getImportance();
                 }
             }
         }

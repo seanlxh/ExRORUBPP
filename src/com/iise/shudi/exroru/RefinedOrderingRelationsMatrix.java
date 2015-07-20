@@ -94,18 +94,18 @@ public class RefinedOrderingRelationsMatrix {
                         for (Event b : toEvents) {
                             if (findTrace(a, b, new HashSet<>()) != null) {
                                 this.causalMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                                        .indexOf(toTransition.getName())].relation = Relation.SOMETIMES;
+                                        .indexOf(toTransition.getName())].setRelation(Relation.SOMETIMES);
                                 this.inverseCausalMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                                        .indexOf(toTransition.getName())].relation = Relation.SOMETIMES;
+                                        .indexOf(toTransition.getName())].setRelation(Relation.SOMETIMES);
                                 selfLoop = true;
                             }
                         }
                     }
                     if (!selfLoop) {
                         this.causalMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                                .indexOf(toTransition.getName())].relation = Relation.NEVER;
+                                .indexOf(toTransition.getName())].setRelation(Relation.NEVER);
                         this.inverseCausalMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                                .indexOf(toTransition.getName())].relation = Relation.NEVER;
+                                .indexOf(toTransition.getName())].setRelation(Relation.NEVER);
                     }
                     continue;
                 }
@@ -162,32 +162,32 @@ public class RefinedOrderingRelationsMatrix {
                 // skiped or looped, a->(ALWAYS)->b
                 if (forwardCount == 0) {
                     this.causalMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.NEVER;
+                            .indexOf(toTransition.getName())].setRelation(Relation.NEVER);
                 } else if (forwardCount < fromEvents.size()) {
 
                     this.causalMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.SOMETIMES;
+                            .indexOf(toTransition.getName())].setRelation(Relation.SOMETIMES);
                 } else if (hasSkipOrLoopForwardTrace) {
                     this.causalMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.SOMETIMES;
+                            .indexOf(toTransition.getName())].setRelation(Relation.SOMETIMES);
                 } else {
                     this.causalMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.ALWAYS;
+                            .indexOf(toTransition.getName())].setRelation(Relation.ALWAYS);
                 }
 
                 // analogously, a <- b has four cases
                 if (backwardCount == 0) {
                     this.inverseCausalMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.NEVER;
+                            .indexOf(toTransition.getName())].setRelation(Relation.NEVER);
                 } else if (backwardCount < fromEvents.size()) {
                     this.inverseCausalMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.SOMETIMES;
+                            .indexOf(toTransition.getName())].setRelation(Relation.SOMETIMES);
                 } else if (hasSkipOrLoopBackwardTrace) {
                     this.inverseCausalMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.SOMETIMES;
+                            .indexOf(toTransition.getName())].setRelation(Relation.SOMETIMES);
                 } else {
                     this.inverseCausalMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.ALWAYS;
+                            .indexOf(toTransition.getName())].setRelation(Relation.ALWAYS);
                 }
             }
         }
@@ -366,38 +366,38 @@ public class RefinedOrderingRelationsMatrix {
 
                 if (noConcurrent) {
                     this.concurrentMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.NEVER;
+                            .indexOf(toTransition.getName())].setRelation(Relation.NEVER);
                     this.concurrentMatrix[this.tName.indexOf(toTransition.getName())][this.tName
-                            .indexOf(fromTransition.getName())].relation = Relation.NEVER;
+                            .indexOf(fromTransition.getName())].setRelation(Relation.NEVER);
                     continue;
                 }
 
                 if (aConcurrentIn.size() == 0) {
                     this.concurrentMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.NEVER;
+                            .indexOf(toTransition.getName())].setRelation(Relation.NEVER);
                 } else if (aConcurrentIn.size() < fromEvents.size()) {
                     this.concurrentMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.SOMETIMES;
+                            .indexOf(toTransition.getName())].setRelation(Relation.SOMETIMES);
                 } else if (aHasSometimesConcurrent) {
                     this.concurrentMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.SOMETIMES;
+                            .indexOf(toTransition.getName())].setRelation(Relation.SOMETIMES);
                 } else {
                     this.concurrentMatrix[this.tName.indexOf(fromTransition.getName())][this.tName
-                            .indexOf(toTransition.getName())].relation = Relation.ALWAYS;
+                            .indexOf(toTransition.getName())].setRelation(Relation.ALWAYS);
                 }
 
                 if (bConcurrentIn.size() == 0) {
                     this.concurrentMatrix[this.tName.indexOf(toTransition.getName())][this.tName
-                            .indexOf(fromTransition.getName())].relation = Relation.NEVER;
+                            .indexOf(fromTransition.getName())].setRelation(Relation.NEVER);
                 } else if (bConcurrentIn.size() < toEvents.size()) {
                     this.concurrentMatrix[this.tName.indexOf(toTransition.getName())][this.tName
-                            .indexOf(fromTransition.getName())].relation = Relation.SOMETIMES;
+                            .indexOf(fromTransition.getName())].setRelation(Relation.SOMETIMES);
                 } else if (bHasSometimesConcurrent) {
                     this.concurrentMatrix[this.tName.indexOf(toTransition.getName())][this.tName
-                            .indexOf(fromTransition.getName())].relation = Relation.SOMETIMES;
+                            .indexOf(fromTransition.getName())].setRelation(Relation.SOMETIMES);
                 } else {
                     this.concurrentMatrix[this.tName.indexOf(toTransition.getName())][this.tName
-                            .indexOf(fromTransition.getName())].relation = Relation.ALWAYS;
+                            .indexOf(fromTransition.getName())].setRelation(Relation.ALWAYS);
                 }
             }
         }
@@ -552,9 +552,9 @@ public class RefinedOrderingRelationsMatrix {
             Transition key = entry.getKey();
             for (Transition value : entry.getValue()) {
                 this.causalMatrix[this.tName.indexOf(key.getName())][this.tName
-                        .indexOf(value.getName())].adjacency = true;
+                        .indexOf(value.getName())].setAdjacency(true);
                 this.inverseCausalMatrix[this.tName.indexOf(key.getName())][this.tName
-                        .indexOf(value.getName())].adjacency = true;
+                        .indexOf(value.getName())].setAdjacency(true);
             }
         }
     }
@@ -580,9 +580,9 @@ public class RefinedOrderingRelationsMatrix {
                 String fromTransition = tName.get(i);
                 String toTransition = tName.get(j);
                 double coef = Math.min(this.importance.get(fromTransition)[0], this.importance.get(toTransition)[1]);
-                this.causalMatrix[i][j].importance = coef;
-                this.inverseCausalMatrix[i][j].importance = coef;
-                this.concurrentMatrix[i][j].importance = coef;
+                this.causalMatrix[i][j].setImportance(coef);
+                this.inverseCausalMatrix[i][j].setImportance(coef);
+                this.concurrentMatrix[i][j].setImportance(coef);
             }
         }
     }

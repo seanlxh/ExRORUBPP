@@ -2,11 +2,12 @@ package com.iise.shudi.exroru;
 
 public class RefinedOrderingRelation {
 
-    public static double SDA_WEIGHT = 0.8;
+    public static double SDA_WEIGHT = 0.0;
+    public static boolean IMPORTANCE = true;
 
-    public Relation relation;
-    public boolean adjacency;
-    public double importance;
+    private Relation relation;
+    private boolean adjacency;
+    private double importance;
 
     public RefinedOrderingRelation(Relation r, boolean a, double i) {
         relation = r;
@@ -20,9 +21,9 @@ public class RefinedOrderingRelation {
         } else if (relation != r.relation) {
             return 0;
         } else if (adjacency != r.adjacency) {
-            return SDA_WEIGHT * Math.min(importance, r.importance);
+            return SDA_WEIGHT * (IMPORTANCE ? Math.min(importance, r.importance) : 1);
         } else {
-            return Math.min(importance, r.importance);
+            return (IMPORTANCE ? Math.min(importance, r.importance) : 1);
         }
     }
 
@@ -30,9 +31,9 @@ public class RefinedOrderingRelation {
         if (relation != r.relation) {
             return 0;
         } else if (adjacency != r.adjacency) {
-            return SDA_WEIGHT * Math.min(importance, r.importance);
+            return SDA_WEIGHT * (IMPORTANCE ? Math.min(importance, r.importance) : 1);
         } else {
-            return Math.min(importance, r.importance);
+            return (IMPORTANCE ? Math.min(importance, r.importance) : 1);
         }
     }
 
@@ -40,16 +41,16 @@ public class RefinedOrderingRelation {
         if (relation == Relation.NEVER && r.relation == Relation.NEVER) {
             return 0;
         } else if (relation == Relation.NEVER) {
-            return r.importance;
+            return (IMPORTANCE ? r.importance : 1);
         } else if (r.relation == Relation.NEVER) {
-            return importance;
+            return (IMPORTANCE ? r.importance : 1);
         } else {
-            return Math.max(importance, r.importance);
+            return (IMPORTANCE ? Math.max(importance, r.importance) : 1);
         }
     }
 
     public double unionWithNever(RefinedOrderingRelation r) {
-        return Math.max(importance, r.importance);
+        return (IMPORTANCE ? Math.max(importance, r.importance) : 1);
     }
 
     public boolean equals(Object o) {
@@ -79,6 +80,30 @@ public class RefinedOrderingRelation {
                 break;
         }
         return s;
+    }
+
+    public Relation getRelation() {
+        return relation;
+    }
+
+    public void setRelation(Relation relation) {
+        this.relation = relation;
+    }
+
+    public boolean isAdjacency() {
+        return adjacency;
+    }
+
+    public void setAdjacency(boolean adjacency) {
+        this.adjacency = adjacency;
+    }
+
+    public double getImportance() {
+        return (IMPORTANCE ? importance : 1);
+    }
+
+    public void setImportance(double importance) {
+        this.importance = importance;
     }
 
 }
