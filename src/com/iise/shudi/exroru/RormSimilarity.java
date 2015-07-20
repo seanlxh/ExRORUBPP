@@ -29,7 +29,7 @@ public class RormSimilarity {
 
         PNMLSerializer pnmlSerializer = new PNMLSerializer();
         RefinedOrderingRelation.SDA_WEIGHT = 0.0;
-        RefinedOrderingRelation.IMPORTANCE = false;
+        RefinedOrderingRelation.IMPORTANCE = true;
         String filepath1 = "C:\\Users\\Shudi\\Desktop\\rorm\\test\\M0.pnml";
         String filepath2 = "C:\\Users\\Shudi\\Desktop\\rorm\\test\\M4.pnml";
         NetSystem net1 = pnmlSerializer.parse(filepath1);
