@@ -1,5 +1,6 @@
 package com.iise.shudi.exroru;
 
+import com.iise.shudi.bp.BehavioralProfileSimilarity;
 import org.jbpt.petri.NetSystem;
 import org.jbpt.petri.io.PNMLSerializer;
 
@@ -31,11 +32,13 @@ public class RormSimilarity {
         RefinedOrderingRelation.SDA_WEIGHT = 0.0;
         RefinedOrderingRelation.IMPORTANCE = true;
         String filepath1 = "C:\\Users\\Shudi\\Desktop\\rorm\\test\\M0.pnml";
-        String filepath2 = "C:\\Users\\Shudi\\Desktop\\rorm\\test\\M4.pnml";
+        String filepath2 = "C:\\Users\\Shudi\\Desktop\\rorm\\test\\M1.pnml";
         NetSystem net1 = pnmlSerializer.parse(filepath1);
         NetSystem net2 = pnmlSerializer.parse(filepath2);
-        RormSimilarity rorm = new RormSimilarity();
-        float sim = rorm.similarity(net1, net2);
+//        RormSimilarity rorm = new RormSimilarity();
+//        float sim = rorm.similarity(net1, net2);
+        BehavioralProfileSimilarity bp = new BehavioralProfileSimilarity();
+        float sim = bp.similarity(net1, net2);
         if(sim == Float.MIN_VALUE) {
             System.out.println("Invalid Net System");
         } else {
