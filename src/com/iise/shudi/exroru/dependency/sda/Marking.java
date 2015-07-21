@@ -3,6 +3,7 @@ package com.iise.shudi.exroru.dependency.sda;
 import org.jbpt.petri.unfolding.CompletePrefixUnfolding;
 import org.jbpt.petri.unfolding.Condition;
 import org.jbpt.petri.unfolding.Event;
+import org.jbpt.petri.unfolding.ProperCompletePrefixUnfolding;
 
 import java.util.*;
 
@@ -11,7 +12,7 @@ public class Marking extends HashMap<Condition, Integer> {
     private static final long serialVersionUID = 4819455305876082860L;
 
     // associated net
-    private CompletePrefixUnfolding _cpu = null;
+    private ProperCompletePrefixUnfolding _cpu = null;
     private Event preVisEvent = null;
     private Event preInvEvent = null;
     private Set<Event> postEnabledEvents = new HashSet<>();
@@ -20,14 +21,14 @@ public class Marking extends HashMap<Condition, Integer> {
     public Marking() {
     }
 
-    public Marking(CompletePrefixUnfolding cpu) {
+    public Marking(ProperCompletePrefixUnfolding cpu) {
         if (cpu == null)
             throw new IllegalArgumentException(
                     "CompletePrefixUnfolding object expected but was NULL!");
         this._cpu = cpu;
     }
 
-    public static Marking createMarking(CompletePrefixUnfolding cpu) {
+    public static Marking createMarking(ProperCompletePrefixUnfolding cpu) {
         Marking m;
         try {
             m = Marking.class.newInstance();
@@ -168,7 +169,7 @@ public class Marking extends HashMap<Condition, Integer> {
         return result;
     }
 
-    public void setCompletePrefixUnfolding(CompletePrefixUnfolding cpu) {
+    public void setCompletePrefixUnfolding(ProperCompletePrefixUnfolding cpu) {
         this.clear();
         this._cpu = cpu;
     }

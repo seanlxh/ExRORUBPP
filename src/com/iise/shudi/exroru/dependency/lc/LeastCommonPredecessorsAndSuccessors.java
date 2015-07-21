@@ -3,10 +3,7 @@ package com.iise.shudi.exroru.dependency.lc;
 import org.jbpt.petri.INode;
 import org.jbpt.petri.NetSystem;
 import org.jbpt.petri.Place;
-import org.jbpt.petri.unfolding.CompletePrefixUnfolding;
-import org.jbpt.petri.unfolding.Condition;
-import org.jbpt.petri.unfolding.Event;
-import org.jbpt.petri.unfolding.IBPNode;
+import org.jbpt.petri.unfolding.*;
 
 import java.util.*;
 
@@ -14,7 +11,7 @@ import java.util.*;
 public class LeastCommonPredecessorsAndSuccessors {
 
     private NetSystem _sys;
-    private CompletePrefixUnfolding _cpu;
+    private ProperCompletePrefixUnfolding _cpu;
     private Set<Condition> _loopJoinConditions;
     private Map<INode, Map<INode, Boolean>> sysReachMap;
     private Map<IBPNode, Map<IBPNode, Boolean>> cpuReachMap;
@@ -30,7 +27,7 @@ public class LeastCommonPredecessorsAndSuccessors {
     private Map<IBPNode, Map<IBPNode, Boolean>> forwardCpuSkip = new HashMap<>();
     private Map<IBPNode, Map<IBPNode, Boolean>> backwardCpuSkip = new HashMap<>();
 
-    public LeastCommonPredecessorsAndSuccessors(CompletePrefixUnfolding cpu) {
+    public LeastCommonPredecessorsAndSuccessors(ProperCompletePrefixUnfolding cpu) {
         this._cpu = cpu;
         this._sys = (NetSystem) cpu.getOriginativeNetSystem();
         this._loopJoinConditions = getLoopJoinConditions();

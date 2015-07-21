@@ -4,10 +4,7 @@ import org.apache.commons.math3.linear.*;
 import org.jbpt.petri.INode;
 import org.jbpt.petri.NetSystem;
 import org.jbpt.petri.Place;
-import org.jbpt.petri.unfolding.CompletePrefixUnfolding;
-import org.jbpt.petri.unfolding.Condition;
-import org.jbpt.petri.unfolding.Event;
-import org.jbpt.petri.unfolding.IBPNode;
+import org.jbpt.petri.unfolding.*;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -16,7 +13,7 @@ import java.util.stream.Collectors;
 public class RelationImportance {
 
     private NetSystem _sys;
-    private CompletePrefixUnfolding _cpu;
+    private ProperCompletePrefixUnfolding _cpu;
     private Map<IBPNode, Map<IBPNode, RealVector>> edges = new HashMap<>();
     private Map<IBPNode, Map<IBPNode, Double>> importance = new HashMap<>();
     private Set<RealVector> equations = new HashSet<>();
@@ -25,7 +22,7 @@ public class RelationImportance {
     private Set<Branch> waitingBranch2s = new HashSet<>();
     private Set<Condition> loopJoinConditions = new HashSet<>();
 
-    public RelationImportance(CompletePrefixUnfolding cpu) {
+    public RelationImportance(ProperCompletePrefixUnfolding cpu) {
         this._cpu = cpu;
         this._sys = (NetSystem) cpu.getOriginativeNetSystem();
         searchEquations();
