@@ -31,6 +31,13 @@ public class InterleavingSimilarity<R extends RelSet<M, N>, M extends IEntityMod
 		double intersection = super.getSizeOfIntersectionOfRelation(alignment, RelSetType.Interleaving);
 		
 		return (in1 + in2 > 0) ? (2*intersection / (in1 + in2)) : 0;
-	}	
+	}
+
+	public int[] getSizeOfIntersectionAndUnion(Alignment<R, N> alignment) {
+		int in1 = super.getSizeOfRelation(alignment.getFirstModel(), RelSetType.Interleaving);
+		int in2 = super.getSizeOfRelation(alignment.getSecondModel(), RelSetType.Interleaving);
+		int intersection = super.getSizeOfIntersectionOfRelation(alignment, RelSetType.Interleaving);
+		return new int[]{intersection, in1 + in2 - intersection};
+	}
 
 }

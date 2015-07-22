@@ -22,7 +22,6 @@ public class BehavioralProfileSimilarity {
             .forEach(t2 -> alignment.addElementaryCorrespondence(t1, t2)));
         AggregatedSimilarity<BehaviouralProfile<NetSystem, Node>, NetSystem, Node>
                 agg = new AggregatedSimilarity<>();
-        agg.setWeights(1, 1, 1, 1, 1);
         return (float) agg.score(alignment);
     }
 

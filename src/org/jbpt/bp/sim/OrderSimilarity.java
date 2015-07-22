@@ -31,5 +31,12 @@ public class OrderSimilarity<R extends RelSet<M, N>, M extends IEntityModel<N>, 
 		double intersection = super.getSizeOfIntersectionOfRelation(alignment, RelSetType.Order);
 		
 		return (in1 + in2 > 0) ? (2*intersection / (in1 + in2)) : 0;
-	}	
+	}
+
+	public int[] getSizeOfIntersectionAndUnion(Alignment<R, N> alignment) {
+		int in1 = super.getSizeOfRelation(alignment.getFirstModel(), RelSetType.Order);
+		int in2 = super.getSizeOfRelation(alignment.getSecondModel(), RelSetType.Order);
+		int intersection = super.getSizeOfIntersectionOfRelation(alignment, RelSetType.Order);
+		return new int[]{intersection, in1 + in2 - intersection};
+	}
 }
