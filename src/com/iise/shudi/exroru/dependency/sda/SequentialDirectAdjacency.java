@@ -246,21 +246,21 @@ public class SequentialDirectAdjacency {
         this.sdaRelations
                 .keySet()
                 .stream()
-                .sorted((a, b) -> a.getName().compareTo(b.getName()))
+                .sorted((a, b) -> a.getLabel().compareTo(b.getLabel()))
                 .forEach(
                         t -> {
                             sb.append("\"");
-                            sb.append(t.getName());
+                            sb.append(t.getLabel());
                             sb.append("\":[");
                             this.sdaRelations
                                     .get(t)
                                     .stream()
-                                    .sorted((a, b) -> a.getName().compareTo(
-                                            b.getName()))
+                                    .sorted((a, b) -> a.getLabel().compareTo(
+                                            b.getLabel()))
                                     .forEach(
                                             tt -> {
                                                 sb.append("\"");
-                                                sb.append(tt.getName());
+                                                sb.append(tt.getLabel());
                                                 sb.append("\",");
                                             });
                             sb.append("]");
