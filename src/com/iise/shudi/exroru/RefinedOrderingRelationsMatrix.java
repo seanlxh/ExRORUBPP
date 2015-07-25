@@ -7,7 +7,10 @@ import org.jbpt.petri.INode;
 import org.jbpt.petri.NetSystem;
 import org.jbpt.petri.Place;
 import org.jbpt.petri.Transition;
-import org.jbpt.petri.unfolding.*;
+import org.jbpt.petri.unfolding.Condition;
+import org.jbpt.petri.unfolding.Event;
+import org.jbpt.petri.unfolding.IBPNode;
+import org.jbpt.petri.unfolding.ProperCompletePrefixUnfolding;
 
 import java.util.*;
 
@@ -35,11 +38,18 @@ public class RefinedOrderingRelationsMatrix {
     private LeastCommonPredecessorsAndSuccessors _lc;
     private SequentialDirectAdjacency _sda;
 
+    private long initTime = 0;
+    private long causalTime = 0;
+    private long concurrentTime = 0;
+    private long sdaTime = 0;
+    private long importanceTime = 0;
+
     public RefinedOrderingRelationsMatrix(NetSystem sys) {
         this(sys, true);
     }
 
     public RefinedOrderingRelationsMatrix(NetSystem sys, boolean extend) {
+        long start = System.currentTimeMillis();
         this._extend = extend;
         this._valid = initialiseNetSystem(sys);
         if (!this._valid) {
@@ -60,18 +70,32 @@ public class RefinedOrderingRelationsMatrix {
                 this.concurrentMatrix[i][j] = new RefinedOrderingRelation(Relation.NEVER, false, 0);
             }
         }
+        this.initTime = System.currentTimeMillis() - start;
+        start = System.currentTimeMillis();
         generateCausalAndInverseCausalMatrix();
+        this.causalTime = System.currentTimeMillis() - start;
+        start = System.currentTimeMillis();
         generateConcurrentMatrix();
+        this.concurrentTime = System.currentTimeMillis() - start;
+        start = System.currentTimeMillis();
         generateSequentialDirectAdjacency();
+        this.sdaTime = System.currentTimeMillis() - start;
+        start = System.currentTimeMillis();
         generateRelationImportance();
+        this.importanceTime = System.currentTimeMillis() - start;
+    }
+
+    public long[] getComputationTime() {
+        return new long[]{this.initTime, this.causalTime, this.concurrentTime,
+                this.sdaTime, this.importanceTime};
     }
 
     private void generateCausalAndInverseCausalMatrix() {
         List<Transition> alObTransitions = new ArrayList<>(this._sys.getObservableTransitions());
         Collections.sort(alObTransitions, (t1, t2) -> {
-            if(t1.getLabel().equals(NEW_TS) || t2.getLabel().equals(NEW_TE)) {
+            if (t1.getLabel().equals(NEW_TS) || t2.getLabel().equals(NEW_TE)) {
                 return -1;
-            } else if(t1.getLabel().equals(NEW_TE) || t2.getLabel().equals(NEW_TS)) {
+            } else if (t1.getLabel().equals(NEW_TE) || t2.getLabel().equals(NEW_TS)) {
                 return 1;
             } else {
                 return t1.getLabel().compareTo(t2.getLabel());
@@ -285,9 +309,9 @@ public class RefinedOrderingRelationsMatrix {
     private void generateConcurrentMatrix() {
         List<Transition> alObTransitions = new ArrayList<>(this._sys.getObservableTransitions());
         Collections.sort(alObTransitions, (t1, t2) -> {
-            if(t1.getLabel().equals(NEW_TS) || t2.getLabel().equals(NEW_TE)) {
+            if (t1.getLabel().equals(NEW_TS) || t2.getLabel().equals(NEW_TE)) {
                 return -1;
-            } else if(t1.getLabel().equals(NEW_TE) || t2.getLabel().equals(NEW_TS)) {
+            } else if (t1.getLabel().equals(NEW_TE) || t2.getLabel().equals(NEW_TS)) {
                 return 1;
             } else {
                 return t1.getLabel().compareTo(t2.getLabel());
@@ -685,7 +709,7 @@ public class RefinedOrderingRelationsMatrix {
         if (!checkNetSystem(net)) {
             return false;
         }
-        if(this._extend) {
+        if (this._extend) {
             extendNetSystem(net);
         }
         net.getNodes().forEach(n -> n.setName(n.getLabel()));

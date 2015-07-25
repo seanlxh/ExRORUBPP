@@ -1,6 +1,5 @@
 package com.iise.shudi.exroru;
 
-import com.iise.shudi.bp.BehavioralProfileSimilarity;
 import org.jbpt.petri.NetSystem;
 import org.jbpt.petri.io.PNMLSerializer;
 
@@ -35,10 +34,10 @@ public class RormSimilarity {
         String filepath2 = "C:\\Users\\Shudi\\Desktop\\rorm\\test\\M0.pnml";
         NetSystem net1 = pnmlSerializer.parse(filepath1);
         NetSystem net2 = pnmlSerializer.parse(filepath2);
-//        RormSimilarity rorm = new RormSimilarity();
-//        float sim = rorm.similarity(net1, net2);
-        BehavioralProfileSimilarity bp = new BehavioralProfileSimilarity();
-        float sim = bp.similarity(net1, net2);
+        RormSimilarity rorm = new RormSimilarity();
+        float sim = rorm.similarity(net1, net2);
+//        BehavioralProfileSimilarity bp = new BehavioralProfileSimilarity();
+//        float sim = bp.similarity(net1, net2);
         if (sim == Float.MIN_VALUE) {
             System.out.println("Invalid Net System");
         } else {
@@ -53,6 +52,32 @@ public class RormSimilarity {
             return Float.MIN_VALUE;
         }
         return similarityWithNever(rorm1, rorm2);
+    }
+
+    public long[] similarityWithTime(NetSystem net1, NetSystem net2) {
+        RefinedOrderingRelationsMatrix rorm1 = new RefinedOrderingRelationsMatrix((NetSystem) net1.clone());
+        RefinedOrderingRelationsMatrix rorm2 = new RefinedOrderingRelationsMatrix((NetSystem) net2.clone());
+        if (!rorm1.isValid() || !rorm2.isValid()) {
+            return null;
+        }
+        long start = System.currentTimeMillis();
+        similarityWithNever(rorm1, rorm2);
+        long simTime = System.currentTimeMillis() - start;
+        long[] times = new long[2 + rorm1.getComputationTime().length + rorm2.getComputationTime().length];
+        int i = 1;
+        long totalTime = 0;
+        for (long l : rorm1.getComputationTime()) {
+            times[i++] = l;
+            totalTime += l;
+        }
+        for (long l : rorm2.getComputationTime()) {
+            times[i++] = l;
+            totalTime += l;
+        }
+        times[i++] = simTime;
+        totalTime += simTime;
+        times[0] = totalTime;
+        return times;
     }
 
     public float similarityWithoutNever(RefinedOrderingRelationsMatrix matrix1, RefinedOrderingRelationsMatrix matrix2) {
