@@ -38,7 +38,8 @@ public class RefinedOrderingRelationsMatrix {
     private LeastCommonPredecessorsAndSuccessors _lc;
     private SequentialDirectAdjacency _sda;
 
-    private long initTime = 0;
+    private long cpuTime = 0;
+    private long lcTime = 0;
     private long causalTime = 0;
     private long concurrentTime = 0;
     private long sdaTime = 0;
@@ -57,7 +58,10 @@ public class RefinedOrderingRelationsMatrix {
         }
         this._sys = sys;
         this._cpu = new ProperCompletePrefixUnfolding(this._sys);
+        this.cpuTime = System.currentTimeMillis() - start;
+        start = System.currentTimeMillis();
         this._lc = new LeastCommonPredecessorsAndSuccessors(this._cpu);
+        this.lcTime = System.currentTimeMillis() - start;
         this._loopJoinConditions = getLoopJoinConditions();
         getTransitionNames();
         this.causalMatrix = new RefinedOrderingRelation[this.tName.size()][this.tName.size()];
@@ -70,7 +74,6 @@ public class RefinedOrderingRelationsMatrix {
                 this.concurrentMatrix[i][j] = new RefinedOrderingRelation(Relation.NEVER, false, 0);
             }
         }
-        this.initTime = System.currentTimeMillis() - start;
         start = System.currentTimeMillis();
         generateCausalAndInverseCausalMatrix();
         this.causalTime = System.currentTimeMillis() - start;
@@ -86,7 +89,7 @@ public class RefinedOrderingRelationsMatrix {
     }
 
     public long[] getComputationTime() {
-        return new long[]{this.initTime, this.causalTime, this.concurrentTime,
+        return new long[]{this.cpuTime, this.lcTime, this.causalTime, this.concurrentTime,
                 this.sdaTime, this.importanceTime};
     }
 

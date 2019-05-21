@@ -39,7 +39,7 @@ public class PNMLSerializer extends DefaultHandler {
 
     private NetSystem pn;
 
-    private HashMap<String, Node> nodes;
+    public HashMap<String, Node> nodes;
 
     private String currentTransitionID;
     private String currentPlaceID;

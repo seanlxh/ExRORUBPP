@@ -30,8 +30,8 @@ public class RormSimilarity {
         PNMLSerializer pnmlSerializer = new PNMLSerializer();
         RefinedOrderingRelation.SDA_WEIGHT = 0.0;
         RefinedOrderingRelation.IMPORTANCE = true;
-        String filepath1 = "C:\\Users\\Shudi\\Desktop\\rorm\\test\\M0.pnml";
-        String filepath2 = "C:\\Users\\Shudi\\Desktop\\rorm\\test\\M0.pnml";
+        String filepath1 = "/Users/little/Downloads/Models/AND-Split+Inv-01.pnml";
+        String filepath2 = "/Users/little/Downloads/Models/AND-Split+Inv-02.pnml";
         NetSystem net1 = pnmlSerializer.parse(filepath1);
         NetSystem net2 = pnmlSerializer.parse(filepath2);
         RormSimilarity rorm = new RormSimilarity();
@@ -222,7 +222,7 @@ public class RormSimilarity {
         double causalSim = causalUnion == 0 ? 0 : causalInter / causalUnion;
         double inverseCausalSim = inverseCausalUnion == 0 ? 0 : inverseCausalInter / inverseCausalUnion;
         double concurrentSim = concurrentUnion == 0 ? 0 : concurrentInter / concurrentUnion;
-        System.out.println(causalSim + " " + inverseCausalSim + " " + concurrentSim);
+        //System.out.println(causalSim + " " + inverseCausalSim + " " + concurrentSim);
         return (float) ((causalSim + inverseCausalSim + concurrentSim) / 3);
     }
 }

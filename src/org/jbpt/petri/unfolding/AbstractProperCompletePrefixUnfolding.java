@@ -29,6 +29,10 @@ public abstract class AbstractProperCompletePrefixUnfolding<BPN extends IBPNode<
      */
     @Override
     protected E checkCutoffB(E e, E corr) {
+    	
+    	return corr;
+    	// commented out by jisheng
+    	/*
         Set<C> ecs = new HashSet<C>(e.getLocalConfiguration().getCut());
         Set<C> ccs = new HashSet<C>(corr.getLocalConfiguration().getCut());
 
@@ -37,6 +41,6 @@ public abstract class AbstractProperCompletePrefixUnfolding<BPN extends IBPNode<
 
         if (ecs.equals(ccs)) return corr;
 
-        return null;
+        return null; */
     }
 }

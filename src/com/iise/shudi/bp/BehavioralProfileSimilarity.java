@@ -13,7 +13,7 @@ public class BehavioralProfileSimilarity {
         final NetSystem net1copy = (NetSystem) net1.clone();
         final NetSystem net2copy = (NetSystem) net2.clone();
         net1copy.getSourcePlaces().stream().forEach(p -> net1copy.getMarking().put(p, 1));
-        net2copy.getSourcePlaces().stream().forEach(p -> net2copy.getMarking().put(p, 2));
+        net2copy.getSourcePlaces().stream().forEach(p -> net2copy.getMarking().put(p, 1));
         BehaviouralProfile<NetSystem, Node> bp1 = BPCreatorUnfolding.getInstance().deriveRelationSet(net1copy);
         BehaviouralProfile<NetSystem, Node> bp2 = BPCreatorUnfolding.getInstance().deriveRelationSet(net2copy);
         Alignment<BehaviouralProfile<NetSystem, Node>, Node> alignment = new Alignment<>(bp1, bp2);
@@ -25,4 +25,12 @@ public class BehavioralProfileSimilarity {
         return (float) agg.score(alignment);
     }
 
+    public static BehaviouralProfile<NetSystem, Node> getBP(NetSystem net1)
+    {
+        //final NetSystem net1copy = (NetSystem) net1.clone();
+        final NetSystem net1copy = net1;
+        net1copy.getSourcePlaces().stream().forEach(p -> net1copy.getMarking().put(p, 1));
+        BehaviouralProfile<NetSystem, Node> bp1 = BPCreatorUnfolding.getInstance().deriveRelationSet(net1copy);
+        return bp1;
+    }
 }

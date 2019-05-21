@@ -104,7 +104,6 @@ public class CausalBehaviouralProfile<M, N extends IEntity> extends BehaviouralP
 		}
 		return equal;
 	}
-	
 	/**
 	 * Checks equality for two causal behavioural profiles only for the
 	 * shared entities. That is, we assess whether the profiles define
